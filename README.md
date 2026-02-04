@@ -1,12 +1,27 @@
-# NC News Seeding
+# NC News
 
-Instructions:
+This repo is an Express server built with full TDD.
 
-1. Add a .env.development file that includes: PGDATABASE = nc_news
-2. Add a .env.test file that includes: PGDATABASE = nc_news_test
-3. Run npm install
-4. To create both databases, run: npm run setup-dbs
-   This will run the setup-dbs.sql file to create both a test and development database.
+## Project dependencies
 
-To connect to the test database use: npm run test-seed
-And to connect to the development database use: npm run seed-dev
+You will need postgreSQL on your machine to run the database
+Run `npm install` to install all of the necessary dependencies
+
+## Environment Variables
+
+In order to connect to the database; `connection.js` will need to know the name of the database we're connection to.
+This is accesed using `dotenv` and will dynamically grab the variable from the following files:
+
+-`.env.development` -`.env.test`
+
+These files need to be created with the following contents:
+
+```
+PGDATABASE=<name of database>
+```
+
+## Seeding the database
+
+To seed the data into the relevant databases run the following script:
+
+-`npm run seed-dev` - for dev database -`npm run seed-test` - for test database

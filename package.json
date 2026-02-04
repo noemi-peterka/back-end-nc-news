@@ -9,7 +9,7 @@
     "test": "jest --runInBand",
     "prepare": "husky install",
     "start": "node listen.js",
-    "test-seed": "jest seed.test.js"
+    "seed-test": "jest seed.test.js"
   },
   "repository": {
     "type": "git",
