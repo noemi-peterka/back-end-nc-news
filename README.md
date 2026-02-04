@@ -12,7 +12,8 @@ Run `npm install` to install all of the necessary dependencies
 In order to connect to the database; `connection.js` will need to know the name of the database we're connection to.
 This is accesed using `dotenv` and will dynamically grab the variable from the following files:
 
--`.env.development` -`.env.test`
+- `.env.development`
+- `.env.test`
 
 These files need to be created with the following contents:
 
@@ -24,4 +25,5 @@ PGDATABASE=<name of database>
 
 To seed the data into the relevant databases run the following script:
 
--`npm run seed-dev` - for dev database -`npm run seed-test` - for test database
+- `npm run seed-dev` - for dev database
+- `npm run seed-test` - for test database
