@@ -12,4 +12,7 @@ app.use("/api/topics", topicsRouter);
 const articlesRouter = require("./routes/articles_routes");
 app.use("/api/articles", articlesRouter);
 
+const usersRouter = require("./routes/users_routes.js");
+app.use("/api/users", usersRouter);
+
 module.exports = app;
