@@ -1,5 +1,5 @@
-const { getArticles } = require("../models/articles_model");
+const { modelArticles } = require("../models/articles_model");
 
 exports.fetchArticles = () => {
-  return getArticles();
+  return modelArticles();
 };

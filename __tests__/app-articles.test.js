@@ -31,7 +31,6 @@ describe("/api/articles", () => {
       .get("/api/articles")
       .expect(200)
       .then(({ body }) => {
-        console.log(body);
         const { articles } = body;
         for (const article of articles) {
           expect(typeof article.comment_count).toBe("number");

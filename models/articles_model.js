@@ -1,6 +1,6 @@
 const db = require("../db/connection");
 
-exports.getArticles = () => {
+exports.modelArticles = () => {
   return db
     .query(
       `
