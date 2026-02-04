@@ -1,6 +1,6 @@
 const db = require("../db/connection");
 
-exports.getTopics = () => {
+exports.modelTopics = () => {
   return db
     .query(`SELECT slug, description FROM topics`)
     .then(({ rows }) => rows);

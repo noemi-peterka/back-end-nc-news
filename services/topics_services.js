@@ -1,5 +1,5 @@
-const { getTopics } = require("../models/topics_model");
+const { modelTopics } = require("../models/topics_model");
 
 exports.fetchTopics = () => {
-  return getTopics();
+  return modelTopics();
 };
