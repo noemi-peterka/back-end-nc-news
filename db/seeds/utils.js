@@ -1,14 +1,13 @@
-function createLookupObject(arrayOfObjects, newObjKey, newObjValue) {
-  const lookupObj = {};
+function createRef(arrayOfObjs, key, val) {
+  const refObj = {};
 
-  for (let i = 0; i < arrayOfObjects.length; i++) {
-    const keyToAdd = arrayOfObjects[i][newObjKey];
-    const valToAdd = arrayOfObjects[i][newObjValue];
+  arrayOfObjs.forEach((obj, i) => {
+    const keyToAdd = obj[key];
+    const valToAdd = obj[val];
+    refObj[keyToAdd] = valToAdd;
+  });
 
-    lookupObj[keyToAdd] = valToAdd;
-  }
-
-  return lookupObj;
+  return refObj;
 }
 
-module.exports = createLookupObject;
+module.exports = createRef;
