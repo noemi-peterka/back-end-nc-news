@@ -64,4 +64,12 @@ describe("api/articles/:article_id", () => {
         expect(body.msg).toBe("Article ID not found");
       });
   });
+  test("GET 400 - Responds with an error when article_id is not a number", () => {
+    return request(app)
+      .get("/api/articles/not-a-number")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Article ID invalid type");
+      });
+  });
 });
