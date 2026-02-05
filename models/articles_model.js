@@ -22,3 +22,21 @@ exports.modelArticles = () => {
     )
     .then(({ rows }) => rows);
 };
+
+exports.modelArticlesById = (article_id) => {
+  return db.query(
+    `
+    SELECT articles.author,
+    articles.title, 
+    articles.article_id, 
+    articles.body, 
+    articles.topic,
+    articles.created_at, 
+    articles.votes, 
+    articles.article_img_url
+    FROM articles
+    WHERE article_id = $1
+    `,
+    [article_id],
+  );
+};

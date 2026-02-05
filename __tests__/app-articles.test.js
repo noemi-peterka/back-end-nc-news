@@ -38,3 +38,30 @@ describe("/api/articles", () => {
       });
   });
 });
+
+describe("api/articles/:article_id", () => {
+  test("GET 200 - Responds with an object with article key, and specific properties based on article_id", () => {
+    return request(app)
+      .get("/api/articles/1")
+      .expect(200)
+      .then(({ body }) => {
+        const { article } = body;
+        expect(typeof article[0].author).toBe("string");
+        expect(typeof article[0].title).toBe("string");
+        expect(article[0].article_id).toBe(1);
+        expect(typeof article[0].body).toBe("string");
+        expect(typeof article[0].topic).toBe("string");
+        expect(typeof article[0].created_at).toBe("string");
+        expect(typeof article[0].votes).toBe("number");
+        expect(typeof article[0].article_img_url).toBe("string");
+      });
+  });
+  test("GET 404 - Responds with an error when given an article_id that doesn't exist in the database", () => {
+    return request(app)
+      .get("/api/articles/999")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Article ID not found");
+      });
+  });
+});

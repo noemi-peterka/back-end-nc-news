@@ -1,18 +1,27 @@
 const express = require("express");
-// Create the server
+const topicsRouter = require("./routes/topics_routes");
+const articlesRouter = require("./routes/articles_routes");
+const usersRouter = require("./routes/users_routes.js");
 const app = express();
+const NotFoundError = require("./errors/not_found_error.js");
 
-// Setup, use JSON
 app.use(express.json());
 
-// Set up the routers
-const topicsRouter = require("./routes/topics_routes");
 app.use("/api/topics", topicsRouter);
-
-const articlesRouter = require("./routes/articles_routes");
 app.use("/api/articles", articlesRouter);
-
-const usersRouter = require("./routes/users_routes.js");
 app.use("/api/users", usersRouter);
+
+app.use((err, request, response, next) => {
+  if (err instanceof NotFoundError) {
+    response.status(404).send({ msg: err.message });
+  } else {
+    next(err);
+  }
+});
+
+app.use((err, request, response, next) => {
+  console.log(err);
+  response.status(500).send({ msg: "Internal Server Error" });
+});
 
 module.exports = app;
