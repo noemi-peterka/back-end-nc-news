@@ -73,3 +73,31 @@ describe("api/articles/:article_id", () => {
       });
   });
 });
+
+describe("api/articles/:article_id/comments", () => {
+  test("GET 200 - Responds with an object with comments key, and specific properties based on given article_id", () => {
+    return request(app)
+      .get("/api/articles/1/comments")
+      .expect(200)
+      .then(({ body }) => {
+        const { comments } = body;
+        expect(typeof comments[0].comment_id).toBe("number");
+      });
+  });
+  test("GET 404 - Responds with an error when given an article_id that doesn't exist in the database", () => {
+    return request(app)
+      .get("/api/articles/999/comments")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Article ID not found");
+      });
+  });
+  test("GET 400 - Responds with an error when article_id is not a number", () => {
+    return request(app)
+      .get("/api/articles/not-a-number/comments")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Article ID invalid type");
+      });
+  });
+});
