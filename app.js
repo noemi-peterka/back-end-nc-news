@@ -2,6 +2,7 @@ const express = require("express");
 const topicsRouter = require("./routes/topics_routes");
 const articlesRouter = require("./routes/articles_routes");
 const usersRouter = require("./routes/users_routes.js");
+const commentsRouter = require("./routes/comments_routes.js");
 const app = express();
 const NotFoundError = require("./errors/not_found_error.js");
 const BadRequest = require("./errors/bad_request_error.js");
@@ -11,6 +12,7 @@ app.use(express.json());
 app.use("/api/topics", topicsRouter);
 app.use("/api/articles", articlesRouter);
 app.use("/api/users", usersRouter);
+app.use("/api/comments", commentsRouter);
 
 app.use((err, request, response, next) => {
   if (err instanceof NotFoundError) {
