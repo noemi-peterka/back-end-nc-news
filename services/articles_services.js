@@ -42,18 +42,19 @@ exports.fetchArticlesCommentsById = (article_id) => {
   });
 };
 
-exports.sendArticlesCommentsById = (article_id) => {
+exports.sendArticlesCommentsById = (article_id, author, body) => {
   const id = Number(article_id);
   if (!Number.isInteger(id)) {
     throw new BadRequest("Article ID invalid type");
   }
-  modelArticlesById(id).then((articles) => {
-    if (articles.rows.length === 0) {
-      throw new NotFoundError("Article ID not found");
-    } else {
-      return modelPostArticlesCommentsById(id, username, body);
-    }
+  if (!author || !body) {
+    throw new BadRequest("Missing required fields");
+  }
 
-    // was working on this one, last bit of task 6
+  return modelArticlesById(id).then(({ rows }) => {
+    if (rows.length === 0) {
+      throw new NotFoundError("Article ID not found");
+    }
+    return modelPostArticlesCommentsById(id, author, body);
   });
 };

@@ -39,10 +39,10 @@ exports.getArticlesCommentsById = (request, response, next) => {
 
 exports.postArticlesCommentsById = (request, response, next) => {
   const { article_id } = request.params;
-  const { username, body } = request.body;
-  sendArticlesCommentsById(article_id, { username, body })
+  const { author, body } = request.body;
+  sendArticlesCommentsById(article_id, author, body)
     .then((comment) => {
-      response.status(200).send({ comment });
+      response.status(201).send({ comment });
     })
     .catch((err) => {
       next(err);

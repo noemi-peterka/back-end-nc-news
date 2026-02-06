@@ -101,3 +101,41 @@ describe("api/articles/:article_id/comments", () => {
       });
   });
 });
+
+describe("api/articles/:article_id/comments", () => {
+  test("POST 200 - Posts the comment succesfully, and receives the comment back", () => {
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send({
+        author: "butter_bridge",
+        body: "This is a test comment",
+      })
+      .expect(201)
+      .then(({ body }) => {
+        const { comment } = body;
+        expect(comment.author).toBe("butter_bridge");
+        expect(comment.body).toBe("This is a test comment");
+        expect(comment.article_id).toBe(1);
+      });
+  });
+  test("POST 404 - Responds with an error when the article ID is nonexistent", () => {
+    return request(app)
+      .post("/api/articles/9999/comments")
+      .send({
+        author: "butter_bridge",
+        body: "This is a test comment",
+      })
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Article ID not found");
+      });
+  });
+  test("GET 400 - Responds with an error when article_id is not a number", () => {
+    return request(app)
+      .get("/api/articles/not-a-number/comments")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Article ID invalid type");
+      });
+  });
+});

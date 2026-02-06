@@ -57,7 +57,7 @@ exports.modelArticlesCommentsById = (article_id) => {
   );
 };
 
-exports.modelPostArticlesCommentsById = (article_id, username, body) => {
+exports.modelPostArticlesCommentsById = (article_id, author, body) => {
   return db
     .query(
       `
@@ -65,7 +65,7 @@ exports.modelPostArticlesCommentsById = (article_id, username, body) => {
     VALUES ($1, $2, $3)
     RETURNING *
     `,
-      [article_id, username, body],
+      [article_id, author, body],
     )
     .then(({ rows }) => rows[0]);
 };
