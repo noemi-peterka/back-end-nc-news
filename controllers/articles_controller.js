@@ -3,6 +3,7 @@ const {
   fetchArticlesById,
   fetchArticlesCommentsById,
   sendArticlesCommentsById,
+  updateArticleVotes,
 } = require("../services/articles_services");
 
 exports.getArticles = (_, response, next) => {
@@ -47,4 +48,14 @@ exports.postArticlesCommentsById = (request, response, next) => {
     .catch((err) => {
       next(err);
     });
+};
+
+exports.patchArticleById = (request, response, next) => {
+  const { article_id } = request.params;
+  const { inc_votes } = request.body;
+  updateArticleVotes(article_id, inc_votes)
+    .then((rows) => {
+      response.status(200).send({ article: rows });
+    })
+    .catch(next);
 };

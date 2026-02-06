@@ -3,6 +3,7 @@ const {
   modelArticlesById,
   modelArticlesCommentsById,
   modelPostArticlesCommentsById,
+  modelUpdateArticleVotes,
 } = require("../models/articles_model");
 
 const NotFoundError = require("../errors/not_found_error");
@@ -56,5 +57,24 @@ exports.sendArticlesCommentsById = (article_id, author, body) => {
       throw new NotFoundError("Article ID not found");
     }
     return modelPostArticlesCommentsById(id, author, body);
+  });
+};
+
+exports.updateArticleVotes = (article_id, inc_votes) => {
+  const id = Number(article_id);
+  if (!Number.isInteger(id)) {
+    throw new BadRequest("Article ID invalid type");
+  }
+  if (!inc_votes) {
+    throw new BadRequest("Missing required fields");
+  }
+
+  return modelArticlesById(id).then(({ rows }) => {
+    if (rows.length === 0) {
+      throw new NotFoundError("Article ID not found");
+    }
+    return modelUpdateArticleVotes(id, inc_votes).then(({ rows }) => {
+      return rows;
+    });
   });
 };

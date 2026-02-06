@@ -69,3 +69,15 @@ exports.modelPostArticlesCommentsById = (article_id, author, body) => {
     )
     .then(({ rows }) => rows[0]);
 };
+
+exports.modelUpdateArticleVotes = (article_id, inc_votes) => {
+  return db.query(
+    `
+      UPDATE articles
+      SET votes = votes + $2
+      WHERE article_id = $1
+      RETURNING *
+    `,
+    [article_id, inc_votes],
+  );
+};
