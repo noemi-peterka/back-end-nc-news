@@ -181,3 +181,50 @@ describe("api/articles/:article_id (PATCH)", () => {
       });
   });
 });
+
+describe("/api/articles?withQueries", () => {
+  test("GET 200 - Sorts by votes when query is ?sort_by=votes", () => {
+    return request(app)
+      .get("/api/articles?sort_by=votes")
+      .expect(200)
+      .then(({ body }) => {
+        const { articles } = body;
+        for (let i = 0; i < articles.length - 1; i++) {
+          expect(articles[i].votes).toBeGreaterThanOrEqual(
+            articles[i + 1].votes,
+          );
+        }
+      });
+  });
+
+  test("GET 200 - Sorts by title asc when query is sort_by=title&order=asc", () => {
+    return request(app)
+      .get("/api/articles?sort_by=title&order=asc")
+      .expect(200)
+      .then(({ body }) => {
+        const { articles } = body;
+        for (let i = 0; i < articles.length - 1; i++) {
+          expect(
+            articles[i].title.localeCompare(articles[i + 1].title),
+          ).toBeLessThanOrEqual(0);
+        }
+      });
+  });
+  test("GET 400 - Invalid sort_by", () => {
+    return request(app)
+      .get("/api/articles?sort_by=notAColumn")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid sort_by query");
+      });
+  });
+
+  test("400: invalid order value", () => {
+    return request(app)
+      .get("/api/articles?order=sideways")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid order query");
+      });
+  });
+});
