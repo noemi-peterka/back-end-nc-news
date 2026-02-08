@@ -1,10 +1,10 @@
 const db = require("../db/connection");
 
-exports.modelArticles = () => {
-  return db
-    .query(
-      `
-      SELECT
+exports.modelArticles = (sort_by, order) => {
+  let orderBy =
+    sort_by === "comment_count" ? "comment_count" : `articles.${sort_by}`;
+
+  const queryStr = `SELECT
         articles.author,
         articles.title,
         articles.article_id,
@@ -17,10 +17,9 @@ exports.modelArticles = () => {
       LEFT JOIN comments
         ON comments.article_id = articles.article_id
       GROUP BY articles.article_id
-      ORDER BY articles.created_at DESC;
-      `,
-    )
-    .then(({ rows }) => rows);
+      ORDER BY ${orderBy} ${order};`;
+
+  return db.query(queryStr).then(({ rows }) => rows);
 };
 
 exports.modelArticlesById = (article_id) => {

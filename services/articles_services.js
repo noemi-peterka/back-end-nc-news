@@ -9,8 +9,27 @@ const {
 const NotFoundError = require("../errors/not_found_error");
 const BadRequest = require("../errors/bad_request_error");
 
-exports.fetchArticles = () => {
-  return modelArticles();
+exports.fetchArticles = (sort_by = "created_at", order = "desc") => {
+  const validSortBy = [
+    "author",
+    "title",
+    "article_id",
+    "topic",
+    "created_at",
+    "votes",
+    "article_img_url",
+    "comment_count",
+  ];
+  if (!validSortBy.includes(sort_by)) {
+    throw new BadRequest("Invalid sort_by query");
+  }
+
+  order = order.toLowerCase();
+  if (order !== "asc" && order !== "desc") {
+    throw new BadRequest("Invalid order query");
+  }
+
+  return modelArticles(sort_by, order);
 };
 
 exports.fetchArticlesById = (article_id) => {
