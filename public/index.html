@@ -3,10 +3,279 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>NC News API</title>
+    <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <h1>NC News</h1>
-    <p>Hello World</p>
+    <header>
+      <h1>NC News API</h1>
+      <p>
+        A RESTful API for accessing NC News articles, comments, topics and
+        users.
+      </p>
+    </header>
+
+    <nav>
+      <h2>Endpoints</h2>
+      <ul>
+        <li><a href="#get-topics">GET /api/topics</a></li>
+        <li><a href="#get-users">GET /api/users</a></li>
+        <li><a href="#get-articles">GET /api/articles</a></li>
+
+        <li><a href="#get-articles-byId">GET /api/articles/:article_id</a></li>
+        <li>
+          <a href="#get-comments-byArticleId"
+            >GET /api/articles/:article_id/comments</a
+          >
+        </li>
+        <li>
+          <a href="#post-comment-byId"
+            >POST /api/articles/:article_id/comments</a
+          >
+        </li>
+        <li>
+          <a href="#patch-article-votes-byId"
+            >PATCH /api/articles/:article_id</a
+          >
+        </li>
+        <li><a href="#delete-comments">DELETE /api/comments/:comment_id</a></li>
+      </ul>
+    </nav>
+
+    <main>
+      <!--Topics-->
+      <section id="get-topics">
+        <h2>GET /api/topics</h2>
+        <p>Responds with a list of all the available topics.</p>
+        <h3>Example Request</h3>
+        <pre>GET /api/topics</pre>
+        <h3>Example Response</h3>
+        <pre>
+                {
+                    "topics": [
+                        {
+                            "slug": "coding",
+                            "description": "Code is love, code is life"
+                        },
+                        {
+                            "slug": "football",
+                            "description": "FOOTIE!"
+                        },
+                        {
+                            "slug": "cooking",
+                            "description": "Hey good looking, what you got cooking?"
+                        }
+                    ]
+                }
+        </pre>
+      </section>
+      <!--Users-->
+      <section id="get-users">
+        <h2>GET /api/users</h2>
+        <p>Responds with a list of all users.</p>
+        <h3>Example Request</h3>
+        <pre>GET /api/users</pre>
+        <h3>Example Response</h3>
+        <pre>
+                {
+                    "users": [
+                        {
+                            "username": "tickle122",
+                            "name": "Tom Tickle",
+                            "avatar_url": "https://vignette.wikia.nocookie.net/mrmen/images/d/d6/Mr-Tickle-9a.png/revision/latest?cb=20180127221953"
+                        },
+                        {
+                            "username": "weegembump",
+                            "name": "Gemma Bump",
+                            "avatar_url": "https://vignette.wikia.nocookie.net/mrmen/images/7/7e/MrMen-Bump.png/revision/latest?cb=20180123225553"
+                        },
+                        {
+                            "username": "jessjelly",
+                            "name": "Jess Jelly",
+                            "avatar_url": "https://vignette.wikia.nocookie.net/mrmen/images/4/4f/MR_JELLY_4A.jpg/revision/latest?cb=20180104121141"
+                        }
+                    ]
+                }
+        </pre>
+      </section>
+      <!--Articles (GET)-->
+      <section id="get-articles">
+        <h2>GET /api/articles</h2>
+        <p>
+          Responds with a list of all available articles.<br />
+          Takes optional queries.
+        </p>
+
+        <h3>Queries</h3>
+        <ul>
+          <li><strong>sort_by</strong> (optional): column to sort by</li>
+          <li><strong>order</strong> (optional): asc or desc</li>
+          <li><strong>topic</strong> (optional): filter articles by topic</li>
+        </ul>
+
+        <h3>Example Request</h3>
+        <pre>GET /api/articles?sort_by=votes&order=desc&topic=coding</pre>
+        <h3>Example Result</h3>
+        <pre>
+            {
+                "articles": [
+                    {
+                        "article_id": 1,
+                        "title": "Running a Node App",
+                        "topic": "coding",
+                        "author": "jessjelly",
+                        "votes": 0,
+                        "comment_count": 8,
+                        "created_at": "2020-11-07T00:00:00.000Z"
+                    }
+                ]
+            }
+        </pre>
+      </section>
+      <!--Articles (GET byId)-->
+      <section id="#get-articles-byId">
+        <h2>GET /api/articles/:article_id</h2>
+        <p>
+          Responds with a single article when given an article_id. <br />
+          The article_id must be an number, or the request will return an error.
+        </p>
+        <h3>Example Request</h3>
+        <pre>GET /api/articles/3</pre>
+        <h3>Example Result</h3>
+        <pre>
+            {
+                "articles": [
+                    {
+                        "author": "happyamy2016",
+                        "title": "22 Amazing open source React projects",
+                        "article_id": 3,
+                        "body": "This is a collection of open source apps built with React.JS library. In this observation, we compared nearly 800 projects to pick the top 22. (React Native: 11, React: 11). To evaluate the quality, Mybridge AI considered a variety of factors to determine how useful the projects are for programmers. To give you an idea on the quality, the average number of Github stars from the 22 projects was 1,681.",
+                        "topic": "coding",
+                        "created_at": "2020-02-29T11:12:00.000Z",
+                        "votes": 0,
+                        "article_img_url": "https://images.pexels.com/photos/11035471/pexels-photo-11035471.jpeg?w=700&h=700"
+                    }
+                ]
+            }
+        </pre>
+      </section>
+      <!--Comments (GET byId)-->
+      <section id="#get-comments-byArticleId">
+        <h2>GET /api/articles/:article_id/comments</h2>
+        <p>
+          Responds with a list of comments based on the given article_id. <br />
+          The article_id must be an number, or the request will return an error.
+        </p>
+        <h3>Example Request</h3>
+        <pre>GET /api/articles/3/comments</pre>
+        <h3>Example Result</h3>
+        <pre>
+            {
+                "comments": [
+                        {
+                            "comment_id": 3,
+                            "votes": 3,
+                            "created_at": "2020-09-22T23:18:00.000Z",
+                            "author": "grumpy19",
+                            "body": "Qui sunt sit voluptas repellendus sed. Voluptatem et repellat fugiat. Rerum doloribus eveniet quidem vero aut sint officiis. Dolor facere et et architecto vero qui et perferendis dolorem. Magni quis ratione adipisci error assumenda ut. Id rerum eos facere sit nihil ipsam officia aspernatur odio.",
+                            "article_id": 3
+                            },
+                        {
+                            "comment_id": 28,
+                            "votes": 2,
+                            "created_at": "2020-03-04T13:05:00.000Z",
+                            "author": "grumpy19",
+                            "body": "Dolorem excepturi quaerat. Earum dolor sapiente aut.",
+                            "article_id": 3
+                        }
+                    ]
+            }
+        </pre>
+      </section>
+      <!--Comments (Post byId)-->
+      <section id="#post-comment-byId">
+        <h2>POST /api/articles/:article_id/comments</h2>
+        <p>
+          Add a comment to an article on the given article_id. <br />
+          The article_id must be an number, or the request will return an error.
+          <br />
+          The body of the post must be in JSON format and contain an author and
+          a body key. <br />
+          The author value must be an author that already exists in the
+          database, and must be a string.
+        </p>
+        <h3>Example Request</h3>
+        <pre>POST /api/articles/2/comments</pre>
+        <pre>
+            body = {
+                "author": "grumpy19",
+                "body": "This is a test comment"
+            }
+        </pre>
+        <h3>Example Result</h3>
+        <pre>
+            {
+                "comment": {
+                    "comment_id": 304,
+                    "article_id": 4,
+                    "body": "This is a test comment",
+                    "votes": 0,
+                    "author": "grumpy19",
+                    "created_at": "2026-02-09T22:16:46.229Z"
+                }
+            }
+        </pre>
+      </section>
+      <!--PATCH (Patch article byId)-->
+      <section id="#patch-article-votes-byId">
+        <h2>PATCH /api/articles/:article_id</h2>
+        <p>
+          Updates an articles vote count on a given article based on article_id
+          <br />
+          The article_id must be an number, or the request will return an error.
+          <br />
+          The body of the post must be in JSON format and contain a key of
+          inc_votes. <br />
+          The inc_votes value must be an integer.
+        </p>
+        <h3>Example Request</h3>
+        <pre>PATCH /api/articles/2</pre>
+        <pre>
+            body = {
+                "inc_votes":4
+            }
+        </pre>
+        <h3>Example Result</h3>
+        <pre>
+            {
+                "article": [
+                    {
+                        "article_id": 2,
+                        "title": "The Rise Of Thinking Machines: How IBM's Watson Takes On The World",
+                        "topic": "coding",
+                        "author": "jessjelly",
+                        "body": "Many people know Watson as the IBM-developed cognitive super computer that won the Jeopardy! gameshow in 2011. In truth, Watson is not actually a computer but a set of algorithms and APIs, and since winning TV fame (and a $1 million prize) IBM has put it to use tackling tough problems in every industry from healthcare to finance. Most recently, IBM has announced several new partnerships which aim to take things even further, and put its cognitive capabilities to use solving a whole new range of problems around the world.",
+                        "created_at": "2020-05-14T00:02:00.000Z",
+                        "votes": 4,
+                        "article_img_url": "https://images.pexels.com/photos/373543/pexels-photo-373543.jpeg?w=700&h=700"
+                    }
+                ]
+            }
+        </pre>
+      </section>
+
+      <!--Comments-->
+      <section id="delete-comments">
+        <h2>DELETE /api/comments/:comment_id</h2>
+        <p>Deletes a comment by given comment_id.</p>
+        <h3>Example Request</h3>
+        <pre>DELETE /api/comments/2</pre>
+        <p>Will return a 204 with no body in the response.</p>
+      </section>
+    </main>
+
+    <footer>
+      <p>NC News API - built with Node.js, Express, and PostgreSQL</p>
+    </footer>
   </body>
 </html>
