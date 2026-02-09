@@ -93,9 +93,10 @@ exports.updateArticleVotes = (article_id, inc_votes) => {
   if (!Number.isInteger(id)) {
     throw new BadRequest("Article ID invalid type");
   }
-  if (!inc_votes) {
+  if (!inc_votes === undefined) {
     throw new BadRequest("Missing required fields");
   }
+  if (!Number.isInteger(inc_votes)) throw new BadRequest("Invalid inc_votes");
 
   return modelArticlesById(id).then(({ rows }) => {
     if (rows.length === 0) {

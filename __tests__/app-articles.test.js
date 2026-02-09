@@ -37,6 +37,19 @@ describe("/api/articles", () => {
         }
       });
   });
+
+  test("GET 200 - The response will contain a comment_count with the total", () => {
+    const dbQuery = db.query(
+      `SELECT COUNT(*)::INT AS count FROM comments WHERE article_id = 1;`,
+    );
+    const apiRequest = request(app).get("/api/articles/1").expect(200);
+    return Promise.all([dbQuery, apiRequest]).then(([dbResult, apiResult]) => {
+      const dbCount = dbResult.rows[0].dbCount;
+      const { article } = apiResult.body;
+      const returnedArticle = Array.isArray(article) ? article[0] : article;
+      expect(returnedArticle.comment_count).toBe(dbCount);
+    });
+  });
 });
 
 describe("api/articles/:article_id", () => {
