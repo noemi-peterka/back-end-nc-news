@@ -10,7 +10,17 @@ afterAll(() => db.end());
 
 describe("/api/comments/:comment_id", () => {
   test("DELETE 204 - deletes the comment and returns no content", () => {
-    return request(app).delete("/api/comments/1").expect(204);
+    return request(app)
+      .delete("/api/comments/1")
+      .expect(204)
+      .then(() => {
+        return request(app)
+          .delete("/api/comments/1")
+          .expect(404)
+          .then(({ body }) => {
+            expect(body.msg).toBe("Comment ID not found");
+          });
+      });
   });
   test("DELETE 404 - comment with that id does not exist", () => {
     return request(app)
