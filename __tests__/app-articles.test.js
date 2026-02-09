@@ -210,6 +210,19 @@ describe("/api/articles?withQueries", () => {
         }
       });
   });
+
+  test("200 - GET articles by topic query", () => {
+    return request(app)
+      .get("/api/articles?topic=cats")
+      .expect(200)
+      .then(({ body }) => {
+        const { articles } = body;
+        for (let i = 0; i < articles.length - 1; i++) {
+          expect(articles.topic).toBe("cats");
+        }
+      });
+  });
+
   test("GET 400 - Invalid sort_by", () => {
     return request(app)
       .get("/api/articles?sort_by=notAColumn")
@@ -219,12 +232,21 @@ describe("/api/articles?withQueries", () => {
       });
   });
 
-  test("400: invalid order value", () => {
+  test("400 - Invalid order value", () => {
     return request(app)
       .get("/api/articles?order=sideways")
       .expect(400)
       .then(({ body }) => {
         expect(body.msg).toBe("Invalid order query");
+      });
+  });
+
+  test("404 - Topic not found", () => {
+    return request(app)
+      .get("/api/articles?topic=banana")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Topic not found");
       });
   });
 });

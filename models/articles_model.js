@@ -1,10 +1,10 @@
 const db = require("../db/connection");
 
-exports.modelArticles = (sort_by, order) => {
+exports.modelArticles = (sort_by, order, topic) => {
   let orderBy =
     sort_by === "comment_count" ? "comment_count" : `articles.${sort_by}`;
 
-  const queryStr = `SELECT
+  let queryStr = `SELECT
         articles.author,
         articles.title,
         articles.article_id,
@@ -15,11 +15,25 @@ exports.modelArticles = (sort_by, order) => {
         COUNT(comments.comment_id)::INT AS comment_count
       FROM articles
       LEFT JOIN comments
-        ON comments.article_id = articles.article_id
-      GROUP BY articles.article_id
+        ON comments.article_id = articles.article_id`;
+
+  const queryValues = [];
+
+  if (topic) {
+    queryStr += ` WHERE articles.topic = $1`;
+    queryValues.push(topic);
+  }
+
+  queryStr += ` GROUP BY articles.article_id
       ORDER BY ${orderBy} ${order};`;
 
-  return db.query(queryStr).then(({ rows }) => rows);
+  return db.query(queryStr, queryValues).then(({ rows }) => rows);
+};
+
+exports.modelTopicExists = (topic) => {
+  return db
+    .query(`SELECT slug FROM topics WHERE slug = $1`, [topic])
+    .then(({ rows }) => rows.length > 0);
 };
 
 exports.modelArticlesById = (article_id) => {

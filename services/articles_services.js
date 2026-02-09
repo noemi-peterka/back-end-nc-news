@@ -1,5 +1,6 @@
 const {
   modelArticles,
+  modelTopicExists,
   modelArticlesById,
   modelArticlesCommentsById,
   modelPostArticlesCommentsById,
@@ -9,7 +10,7 @@ const {
 const NotFoundError = require("../errors/not_found_error");
 const BadRequest = require("../errors/bad_request_error");
 
-exports.fetchArticles = (sort_by = "created_at", order = "desc") => {
+exports.fetchArticles = (sort_by = "created_at", order = "desc", topic) => {
   const validSortBy = [
     "author",
     "title",
@@ -29,7 +30,15 @@ exports.fetchArticles = (sort_by = "created_at", order = "desc") => {
     throw new BadRequest("Invalid order query");
   }
 
-  return modelArticles(sort_by, order);
+  return modelArticles(sort_by, order, topic).then((articles) => {
+    if (topic && articles.length === 0) {
+      return modelTopicExists(topic).then((exists) => {
+        if (!exists) throw new NotFoundError("Topic not found");
+        return [];
+      });
+    }
+    return articles;
+  });
 };
 
 exports.fetchArticlesById = (article_id) => {
