@@ -1,8 +1,7 @@
+const { prototype } = require("supertest/lib/agent");
 const app = require("./app");
-const port = 8080;
+const { PORT = 9090 } = process.env;
 
-// What port we listen on
-
-app.listen(port, () => {
-  console.log(`Listening on port ${port}`);
+app.listen(PORT, () => {
+  console.log(`Listening on port ${PORT}`);
 });
