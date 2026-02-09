@@ -86,6 +86,7 @@ The following endpoints are available:
 
 - GET /api/topics → responds with a list of all the available topics
 - GET /api/users → responds with a list of users
+- GET users/:username → responds with a single user based on given username
 - GET /api/articles → responds with a list of all available articles
 - GET /api/articles/:article_id → responds with a single article by given article_id (must be a number)
 - GET /api/articles/:article_id/comments → responds with a list of comments for a given article_id

@@ -23,8 +23,8 @@
       <ul>
         <li><a href="#get-topics">GET /api/topics</a></li>
         <li><a href="#get-users">GET /api/users</a></li>
+        <li><a href="#get-user-by-username">GET /api/users/:username</a></li>
         <li><a href="#get-articles">GET /api/articles</a></li>
-
         <li><a href="#get-articles-byId">GET /api/articles/:article_id</a></li>
         <li>
           <a href="#get-comments-byArticleId"
@@ -101,6 +101,26 @@
 }
         </pre>
       </section>
+      <!--Users (GET by username)-->
+      <section id="get-user-by-username">
+        <h2>GET /api/users/:username</h2>
+        <p>Responds with a single user based on given username.</p>
+        <h3>Example Request</h3>
+        <pre>GET /api/users/tickle122</pre>
+        <h3>Example Response</h3>
+        <pre>
+{
+    "user": [
+        {
+            "username": "tickle122",
+            "name": "Tom Tickle",
+            "avatar_url": "https://vignette.wikia.nocookie.net/mrmen/images/d/d6/Mr-Tickle-9a.png/revision/latest?cb=20180127221953"
+        }
+    ]
+}
+        </pre>
+      </section>
+
       <!--Articles (GET)-->
       <section id="get-articles">
         <h2>GET /api/articles</h2>
