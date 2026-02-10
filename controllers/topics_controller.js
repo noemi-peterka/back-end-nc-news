@@ -1,4 +1,4 @@
-const { fetchTopics } = require("../services/topics_services");
+const { fetchTopics, sendTopic } = require("../services/topics_services");
 
 exports.getTopics = (request, response, next) => {
   fetchTopics()
@@ -6,4 +6,15 @@ exports.getTopics = (request, response, next) => {
       response.status(200).send({ topics });
     })
     .catch(next);
+};
+
+exports.postTopic = (request, response, next) => {
+  const { slug, description } = request.body;
+  sendTopic(slug, description)
+    .then((topic) => {
+      response.status(201).send({ topic });
+    })
+    .catch((err) => {
+      next(err);
+    });
 };
