@@ -92,5 +92,6 @@ The following endpoints are available:
 - GET /api/articles/:article_id/comments → responds with a list of comments for a given article_id
 - POST /api/articles/:article_id/comments → add a comment to given article_id
 - PATCH /api/articles/:article_id → updates an articles votes by given article_id
+- PATCH /api/comments/:comment_id → updates a comments votes by given comment_id
 - DELETE /api/comments/:comment_id → deletes a comment by given comment_id
 - GET /api/articles? + (queries) → allows articles to be filtered and sorted by query parameters

@@ -41,6 +41,11 @@
             >PATCH /api/articles/:article_id</a
           >
         </li>
+        <li>
+          <a href="#patch-comment-votes-byId"
+            >PATCH /api/comments/:comment_id</a
+          >
+        </li>
         <li><a href="#delete-comments">DELETE /api/comments/:comment_id</a></li>
       </ul>
     </nav>
@@ -249,7 +254,7 @@ body = {
 }
         </pre>
       </section>
-      <!--PATCH (Patch article byId)-->
+      <!--PATCH Article (Patch article byId)-->
       <section id="patch-article-votes-byId">
         <h2>PATCH /api/articles/:article_id</h2>
         <p>
@@ -283,6 +288,39 @@ body = {
             "article_img_url": "https://images.pexels.com/photos/373543/pexels-photo-373543.jpeg?w=700&h=700"
         }
     ]
+}
+        </pre>
+      </section>
+      <!--PATCH Comment(Patch comment byId)-->
+      <section id="patch-comment-votes-byId">
+        <h2>PATCH /api/comments/:comment_id</h2>
+        <p>
+          Updates a comments vote count on a specified comment_id.
+          <br />
+          The comment_id must be a number, or the request will return an error.
+          <br />
+          The body of the post must be in JSON format and contain a key of
+          inc_votes. <br />
+          The inc_votes value must be an integer.
+        </p>
+        <h3>Example Request</h3>
+        <pre>PATCH /api/comments/1</pre>
+        <pre>
+body = {
+    "inc_votes":5
+}
+        </pre>
+        <h3>Example Result</h3>
+        <pre>
+{
+    "comment": {
+		"comment_id": 1,
+		"article_id": 18,
+		"body": "Itaque quisquam est similique et est perspiciatis reprehenderit voluptatem autem. Voluptatem accusantium eius error adipisci quibusdam doloribus.",
+		"votes": 5,
+		"author": "tickle122",
+		"created_at": "2020-05-21T22:19:00.000Z"
+	}
 }
         </pre>
       </section>
