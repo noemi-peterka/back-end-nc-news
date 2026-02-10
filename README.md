@@ -1,7 +1,7 @@
 # NC News API
 
 🔗 **Hosted version:**
-https://nc-news-0plp.onrender.com/
+https://nc-news-0plp.onrender.com/api
 
 ---
 
@@ -56,7 +56,7 @@ PGDATABASE=<name of database>
 
 To seed the data into the relevant databases run the following script:
 
-- `npm run seed-dev` - for dev database
+- `npm run seed` - for dev database
 - `npm run seed-test` - for test database
 
 ---

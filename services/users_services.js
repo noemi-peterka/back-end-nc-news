@@ -8,7 +8,6 @@ exports.fetchUsers = () => {
 
 exports.fetchUserByUsername = (username) => {
   return modelUserByUsername(username).then((user) => {
-    console.log(user);
     if (user.rows.length === 0) {
       throw new NotFoundError("Username not found");
     }
