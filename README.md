@@ -96,4 +96,5 @@ The following endpoints are available:
 - PATCH /api/articles/:article_id → updates an articles votes by given article_id
 - PATCH /api/comments/:comment_id → updates a comments votes by given comment_id
 - DELETE /api/comments/:comment_id → deletes a comment by given comment_id
+- DELETE /api/articles/:article_id → deletes an article by given comment_id
 - GET /api/articles? + (queries) → allows articles to be filtered and sorted by query parameters

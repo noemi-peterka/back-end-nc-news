@@ -7,6 +7,8 @@ const {
   modelUpdateArticleVotes,
   modelPostArticle,
   modelUserExists,
+  modelDeleteArticle,
+  modelDeleteCommentsByArticleId,
 } = require("../models/articles_model");
 
 const NotFoundError = require("../errors/not_found_error");
@@ -136,5 +138,18 @@ exports.updateArticleVotes = (article_id, inc_votes) => {
     return modelUpdateArticleVotes(id, inc_votes).then(({ rows }) => {
       return rows;
     });
+  });
+};
+
+exports.deleteArticle = (article_id) => {
+  const id = Number(article_id);
+  if (!Number.isInteger(id)) throw new BadRequest("Article ID invalid type");
+
+  return modelArticlesById(id).then(({ rows }) => {
+    if (rows.length === 0) throw new NotFoundError("Article ID not found");
+
+    return modelDeleteCommentsByArticleId(id)
+      .then(() => modelDeleteArticle(id))
+      .then(() => undefined);
   });
 };

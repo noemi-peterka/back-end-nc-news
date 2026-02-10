@@ -5,6 +5,7 @@ const {
   fetchArticlesCommentsById,
   sendArticlesCommentsById,
   updateArticleVotes,
+  deleteArticle,
 } = require("../services/articles_services");
 
 exports.getArticles = (request, response, next) => {
@@ -71,4 +72,15 @@ exports.patchArticleById = (request, response, next) => {
       response.status(200).send({ article: rows });
     })
     .catch(next);
+};
+
+exports.deleteArticleById = (request, response, next) => {
+  const { article_id } = request.params;
+  deleteArticle(article_id)
+    .then(() => {
+      response.status(204).send();
+    })
+    .catch((err) => {
+      next(err);
+    });
 };

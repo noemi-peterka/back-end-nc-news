@@ -344,3 +344,35 @@ describe("/api/articles?withQueries", () => {
       });
   });
 });
+
+describe("/api/articles/:article_id", () => {
+  test("DELETE 204 - deletes the article and returns no content", () => {
+    return request(app)
+      .delete("/api/articles/1")
+      .expect(204)
+      .then(() => {
+        return request(app)
+          .delete("/api/articles/1")
+          .expect(404)
+          .then(({ body }) => {
+            expect(body.msg).toBe("Article ID not found");
+          });
+      });
+  });
+  test("DELETE 404 - article with that id does not exist", () => {
+    return request(app)
+      .delete("/api/articles/9999")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Article ID not found");
+      });
+  });
+  test("DELETE 400 - the provided article id is invalid", () => {
+    return request(app)
+      .delete("/api/articles/not-a-number")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Article ID invalid type");
+      });
+  });
+});

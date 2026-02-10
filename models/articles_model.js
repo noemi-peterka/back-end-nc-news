@@ -116,3 +116,13 @@ exports.modelPostArticle = (author, title, body, topic, article_img_url) => {
     [author, title, body, topic, article_img_url],
   );
 };
+
+exports.modelDeleteCommentsByArticleId = (article_id) => {
+  return db.query(`DELETE FROM comments WHERE article_id = $1;`, [article_id]);
+};
+
+exports.modelDeleteArticle = (article_id) => {
+  return db.query(`DELETE FROM articles WHERE article_id = $1 RETURNING *;`, [
+    article_id,
+  ]);
+};

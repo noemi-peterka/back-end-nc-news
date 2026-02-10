@@ -53,6 +53,7 @@
           >
         </li>
         <li><a href="#delete-comments">DELETE /api/comments/:comment_id</a></li>
+        <li><a href="#delete-article">DELETE /api/articles/:article_id</a></li>
       </ul>
     </nav>
 
@@ -403,12 +404,20 @@ body = {
         </pre>
       </section>
 
-      <!--Comments-->
+      <!--DELETE Comments-->
       <section id="delete-comments">
         <h2>DELETE /api/comments/:comment_id</h2>
         <p>Deletes a comment by given comment_id.</p>
         <h3>Example Request</h3>
         <pre>DELETE /api/comments/2</pre>
+        <p>Will return a 204 with no body in the response.</p>
+      </section>
+      <!--DELETE Articles-->
+      <section id="delete-article">
+        <h2>DELETE /api/articles/:article_id</h2>
+        <p>Deletes an article by given article_id.</p>
+        <h3>Example Request</h3>
+        <pre>DELETE /api/articles/2</pre>
         <p>Will return a 204 with no body in the response.</p>
       </section>
     </main>
