@@ -1,34 +1,56 @@
 const db = require("../db/connection");
 
-exports.modelArticles = (sort_by, order, topic) => {
-  let orderBy =
+exports.modelArticles = (sort_by, order, topic, limit, offset) => {
+  const orderBy =
     sort_by === "comment_count" ? "comment_count" : `articles.${sort_by}`;
 
-  let queryStr = `SELECT
-        articles.author,
-        articles.title,
-        articles.article_id,
-        articles.body,
-        articles.topic,
-        articles.created_at,
-        articles.votes,
-        articles.article_img_url,
-        COUNT(comments.comment_id)::INT AS comment_count
-      FROM articles
-      LEFT JOIN comments
-        ON comments.article_id = articles.article_id`;
-
-  const queryValues = [];
+  const values = [];
+  let whereClause = "";
 
   if (topic) {
-    queryStr += ` WHERE articles.topic = $1`;
-    queryValues.push(topic);
+    values.push(topic);
+    whereClause = `WHERE articles.topic = $1`;
   }
 
-  queryStr += ` GROUP BY articles.article_id
-      ORDER BY ${orderBy} ${order};`;
+  const countQuery = `
+    SELECT COUNT(*)::INT AS total_count
+    FROM articles
+    ${whereClause};
+  `;
+  const limitParam = topic ? "$2" : "$1";
+  const offsetParam = topic ? "$3" : "$2";
 
-  return db.query(queryStr, queryValues).then(({ rows }) => rows);
+  const articlesQuery = `
+    SELECT
+      articles.author,
+      articles.title,
+      articles.article_id,
+      articles.body,
+      articles.topic,
+      articles.created_at,
+      articles.votes,
+      articles.article_img_url,
+      COUNT(comments.comment_id)::INT AS comment_count
+    FROM articles
+    LEFT JOIN comments
+      ON comments.article_id = articles.article_id
+    ${whereClause}
+    GROUP BY articles.article_id
+    ORDER BY ${orderBy} ${order}
+    LIMIT ${limitParam} OFFSET ${offsetParam};
+  `;
+
+  const articlesValues = topic ? [topic, limit, offset] : [limit, offset];
+
+  return Promise.all([
+    db.query(countQuery, values),
+    db.query(articlesQuery, articlesValues),
+  ]).then(([countRes, articlesRes]) => {
+    return {
+      total_count: countRes.rows[0].total_count,
+      articles: articlesRes.rows,
+    };
+  });
 };
 
 exports.modelTopicExists = (topic) => {

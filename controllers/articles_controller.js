@@ -9,14 +9,12 @@ const {
 } = require("../services/articles_services");
 
 exports.getArticles = (request, response, next) => {
-  const { sort_by, order, topic } = request.query;
-  fetchArticles(sort_by, order, topic)
-    .then((articles) => {
-      response.status(200).send({ articles });
+  const { sort_by, order, topic, limit, p } = request.query;
+  fetchArticles(sort_by, order, topic, limit, p)
+    .then(({ articles, total_count }) => {
+      response.status(200).send({ total_count, articles });
     })
-    .catch((err) => {
-      next(err);
-    });
+    .catch(next);
 };
 
 exports.getArticlesById = (request, response, next) => {

@@ -14,7 +14,25 @@ const {
 const NotFoundError = require("../errors/not_found_error");
 const BadRequest = require("../errors/bad_request_error");
 
-exports.fetchArticles = (sort_by = "created_at", order = "desc", topic) => {
+exports.fetchArticles = (
+  sort_by = "created_at",
+  order = "desc",
+  topic,
+  limit = 10,
+  p = 1,
+) => {
+  const limitNum = Number(limit);
+  const pageNum = Number(p);
+
+  if (!Number.isInteger(limitNum) || limitNum < 1) {
+    throw new BadRequest("Invalid limit query");
+  }
+
+  if (!Number.isInteger(pageNum) || pageNum < 1) {
+    throw new BadRequest("Invalid p query");
+  }
+
+  const offset = (pageNum - 1) * limitNum;
   const validSortBy = [
     "author",
     "title",
@@ -34,15 +52,17 @@ exports.fetchArticles = (sort_by = "created_at", order = "desc", topic) => {
     throw new BadRequest("Invalid order query");
   }
 
-  return modelArticles(sort_by, order, topic).then((articles) => {
-    if (topic && articles.length === 0) {
-      return modelTopicExists(topic).then((exists) => {
-        if (!exists) throw new NotFoundError("Topic not found");
-        return [];
-      });
-    }
-    return articles;
-  });
+  return modelArticles(sort_by, order, topic, limitNum, offset).then(
+    ({ articles, total_count }) => {
+      if (topic && total_count === 0) {
+        return modelTopicExists(topic).then((exists) => {
+          if (!exists) throw new NotFoundError("Topic not found");
+          return { articles: [], total_count: 0 };
+        });
+      }
+      return { articles, total_count };
+    },
+  );
 };
 
 exports.fetchArticlesById = (article_id) => {

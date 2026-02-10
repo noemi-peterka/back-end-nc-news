@@ -51,6 +51,33 @@ describe("/api/articles", () => {
       expect(returnedArticle.comment_count).toBe(dbCount);
     });
   });
+
+  test("GET 200 - defaults to limit 10", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.articles.length).toBe(10);
+      });
+  });
+
+  test("GET 200 - responds with paginated articles for limit and p", () => {
+    return request(app)
+      .get("/api/articles?limit=5&p=2")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.articles.length).toBe(5);
+      });
+  });
+
+  test("GET 200 - total_count ignores limit", () => {
+    return request(app)
+      .get("/api/articles?limit=5&p=1")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.total_count).toBeGreaterThan(5);
+      });
+  });
 });
 
 describe("api/articles/:article_id", () => {
