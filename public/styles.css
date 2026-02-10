@@ -61,18 +61,21 @@ nav ul {
   list-style: none;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 8px;
+  gap: 12px;
 }
 
 nav a {
   display: block;
-  padding: 10px 12px;
+  padding: 10px 10px;
   background-color: #f9fafb;
   border: 1px solid #e5e7eb;
   border-radius: 6px;
   color: #111;
   text-decoration: none;
   font-size: 0.95rem;
+  box-shadow:
+    0 4px 4px 0 rgba(110, 109, 109, 0.2),
+    0 3px 4px 0 rgba(79, 79, 79, 0.19);
 }
 
 nav a:hover {
@@ -91,6 +94,9 @@ section {
   border-radius: 8px;
   padding: 24px;
   margin-bottom: 24px;
+  box-shadow:
+    0 4px 8px 0 rgba(0, 0, 0, 0.2),
+    0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 section h2 {

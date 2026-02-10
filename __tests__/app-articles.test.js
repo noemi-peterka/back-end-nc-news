@@ -21,6 +21,7 @@ describe("/api/articles", () => {
           expect(typeof article.article_id).toBe("number");
           expect(typeof article.topic).toBe("string");
           expect(typeof article.created_at).toBe("string");
+          expect(typeof article.body).toBe("string");
           expect(typeof article.votes).toBe("number");
           expect(typeof article.article_img_url).toBe("string");
         }
@@ -153,6 +154,86 @@ describe("api/articles/:article_id/comments (POST)", () => {
       .expect(400)
       .then(({ body }) => {
         expect(body.msg).toBe("Article ID invalid type");
+      });
+  });
+});
+
+describe("api/articles (POST)", () => {
+  test("POST 200 - Posts the article succesfully, and receives the article back. When unspecified uses default image_url", () => {
+    return request(app)
+      .post("/api/articles")
+      .send({
+        author: "butter_bridge",
+        title: "The Notorious MSG’s Unlikely Formula For Success",
+        topic: "mitch",
+        body: "This is the body of a new test article",
+      })
+      .expect(201)
+      .then(({ body }) => {
+        const { article } = body;
+        expect(article.author).toBe("butter_bridge");
+        expect(article.title).toBe(
+          "The Notorious MSG’s Unlikely Formula For Success",
+        );
+        expect(article.topic).toBe("mitch");
+        expect(article.body).toBe("This is the body of a new test article");
+        expect(article.article_img_url).toBe(
+          "https://images.pexels.com/photos/5138715/pexels-photo-5138715.jpeg?_gl=1*1p6moza*_ga*MjEyNTc4NTk0Mi4xNzcwNzM1NTE3*_ga_8JE65Q40S6*czE3NzA3MzU1MTckbzEkZzEkdDE3NzA3MzU1ODUkajYwJGwwJGgw",
+        );
+      });
+  });
+  test("POST 400 - Responds with an error when one of the fields is missing", () => {
+    return request(app)
+      .post("/api/articles")
+      .send({
+        author: "butter_bridge",
+        body: "This is a test comment",
+      })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Missing required fields");
+      });
+  });
+  test("POST 400 - Responds with an error when a field is the wrong type", () => {
+    return request(app)
+      .post("/api/articles")
+      .send({
+        author: "butter_bridge",
+        title: "The Notorious MSG’s Unlikely Formula For Success",
+        topic: "mitch",
+        body: 2,
+      })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid field type");
+      });
+  });
+  test("POST 404 - Responds with an error when the author doesn't exist in db", () => {
+    return request(app)
+      .post("/api/articles")
+      .send({
+        author: "grumpy19",
+        title: "The Notorious MSG’s Unlikely Formula For Success",
+        topic: "mitch",
+        body: "Test article",
+      })
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Author not found");
+      });
+  });
+  test("POST 404 - Responds with an error when the topic doesn't exist in db", () => {
+    return request(app)
+      .post("/api/articles")
+      .send({
+        author: "butter_bridge",
+        title: "The Notorious MSG’s Unlikely Formula For Success",
+        topic: "not a topic",
+        body: "Test article",
+      })
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Topic not found");
       });
   });
 });

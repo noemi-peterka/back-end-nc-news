@@ -1,5 +1,6 @@
 const {
   fetchArticles,
+  sendArticle,
   fetchArticlesById,
   fetchArticlesCommentsById,
   sendArticlesCommentsById,
@@ -45,6 +46,17 @@ exports.postArticlesCommentsById = (request, response, next) => {
   sendArticlesCommentsById(article_id, author, body)
     .then((comment) => {
       response.status(201).send({ comment });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+exports.postArticle = (request, response, next) => {
+  const { author, title, body, topic, article_img_url } = request.body;
+  sendArticle(author, title, body, topic, article_img_url)
+    .then((article) => {
+      response.status(201).send({ article });
     })
     .catch((err) => {
       next(err);

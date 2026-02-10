@@ -5,6 +5,8 @@ const {
   modelArticlesCommentsById,
   modelPostArticlesCommentsById,
   modelUpdateArticleVotes,
+  modelPostArticle,
+  modelUserExists,
 } = require("../models/articles_model");
 
 const NotFoundError = require("../errors/not_found_error");
@@ -88,14 +90,43 @@ exports.sendArticlesCommentsById = (article_id, author, body) => {
   });
 };
 
+exports.sendArticle = (author, title, body, topic, article_img_url) => {
+  if (!author || !title || !body || !topic) {
+    throw new BadRequest("Missing required fields");
+  }
+
+  if (
+    typeof author !== "string" ||
+    typeof title !== "string" ||
+    typeof body !== "string" ||
+    typeof topic !== "string" ||
+    (article_img_url !== undefined && typeof article_img_url !== "string")
+  ) {
+    throw new BadRequest("Invalid field type");
+  }
+
+  return Promise.all([modelUserExists(author), modelTopicExists(topic)]).then(
+    ([userExists, topicExists]) => {
+      if (!userExists) throw new NotFoundError("Author not found");
+      if (!topicExists) throw new NotFoundError("Topic not found");
+
+      return modelPostArticle(author, title, body, topic, article_img_url).then(
+        ({ rows }) => {
+          const article = rows[0];
+          return { ...article, comment_count: 0 };
+        },
+      );
+    },
+  );
+};
+
 exports.updateArticleVotes = (article_id, inc_votes) => {
   const id = Number(article_id);
   if (!Number.isInteger(id)) {
     throw new BadRequest("Article ID invalid type");
   }
-  if (!inc_votes === undefined) {
-    throw new BadRequest("Missing required fields");
-  }
+  if (inc_votes === undefined) throw new BadRequest("Missing required fields");
+
   if (!Number.isInteger(inc_votes)) throw new BadRequest("Invalid inc_votes");
 
   return modelArticlesById(id).then(({ rows }) => {

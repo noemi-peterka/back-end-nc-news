@@ -8,6 +8,7 @@ exports.modelArticles = (sort_by, order, topic) => {
         articles.author,
         articles.title,
         articles.article_id,
+        articles.body,
         articles.topic,
         articles.created_at,
         articles.votes,
@@ -92,5 +93,26 @@ exports.modelUpdateArticleVotes = (article_id, inc_votes) => {
       RETURNING *
     `,
     [article_id, inc_votes],
+  );
+};
+
+exports.modelUserExists = (username) => {
+  return db
+    .query(`SELECT username FROM users WHERE username = $1`, [username])
+    .then(({ rows }) => rows.length > 0);
+};
+
+exports.modelPostArticle = (author, title, body, topic, article_img_url) => {
+  if (article_img_url === undefined) {
+    article_img_url =
+      "https://images.pexels.com/photos/5138715/pexels-photo-5138715.jpeg?_gl=1*1p6moza*_ga*MjEyNTc4NTk0Mi4xNzcwNzM1NTE3*_ga_8JE65Q40S6*czE3NzA3MzU1MTckbzEkZzEkdDE3NzA3MzU1ODUkajYwJGwwJGgw";
+  }
+  return db.query(
+    `
+    INSERT INTO articles (author, title, body, topic, article_img_url)
+    VALUES ($1, $2, $3, $4, $5)
+    RETURNING article_id, author, title, body, topic, article_img_url, votes, created_at
+    `,
+    [author, title, body, topic, article_img_url],
   );
 };
