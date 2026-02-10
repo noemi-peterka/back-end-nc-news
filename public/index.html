@@ -35,6 +35,9 @@
           <a href="#post-article">POST /api/articles</a>
         </li>
         <li>
+          <a href="#post-topic">POST /api/topics</a>
+        </li>
+        <li>
           <a href="#post-comment-byId"
             >POST /api/articles/:article_id/comments</a
           >
@@ -224,7 +227,7 @@
         </pre>
       </section>
       <!--Article (Post )-->
-      <section id="post-comment-byId">
+      <section id="post-article">
         <h2>POST /api/articles</h2>
         <p>
           Add an article to the articles database. <br />
@@ -260,6 +263,37 @@ body = {
 		"votes": 0,
 		"created_at": "2026-02-10T15:21:47.713Z",
 		"comment_count": 0
+	}
+}
+        </pre>
+      </section>
+      <!--Topic (Post )-->
+      <section id="post-topic">
+        <h2>POST /api/topics</h2>
+        <p>
+          Add a topic to the topics database. <br />
+          The body of the POST must contain a slug (string) and a description
+          (string).
+
+          <br />
+          The slug must be unique otherwise you'll get a 400 error sayingt the
+          topic already exists.
+        </p>
+        <h3>Example Request</h3>
+        <pre>POST /api/topics</pre>
+        <pre>
+body = {
+    "slug": "politics",
+    "description": "For any political articles"
+}
+        </pre>
+        <h3>Example Result</h3>
+        <pre>
+{
+	"topic": {
+		"slug": "politics",
+		"description": "For any political articles",
+		"img_url": null
 	}
 }
         </pre>
