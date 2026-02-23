@@ -6,7 +6,9 @@ const commentsRouter = require("./routes/comments_routes.js");
 const app = express();
 const NotFoundError = require("./errors/not_found_error.js");
 const BadRequest = require("./errors/bad_request_error.js");
+// const cors = require("cors");
 
+// app.use(cors());
 app.use(express.json());
 
 app.use("/api", express.static("public"));
