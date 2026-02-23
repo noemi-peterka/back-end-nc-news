@@ -2,7 +2,7 @@ const db = require("../db/connection");
 
 exports.modelTopics = () => {
   return db
-    .query(`SELECT slug, description FROM topics`)
+    .query(`SELECT slug, description, img_url FROM topics`)
     .then(({ rows }) => rows);
 };
 
